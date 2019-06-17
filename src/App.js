@@ -4,6 +4,7 @@ import {Switch, Route  } from 'react-router-dom';
 
 import Layout from './components/Layout';
 import Home from './components/Home';
+import MalyshkiWidget from "./components/malyshki";
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
     <Layout>
         <Switch>
           <Route exact path='/' component={Home} />
+          <Route exact path='/girls' component={MalyshkiWidget} />
         </Switch>
     </Layout>
 

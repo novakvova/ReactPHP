@@ -27,6 +27,9 @@ class NavMenu extends Component {
                                 <li className="nav-item">
                                     <a className="text-dark nav-link" href="/login">Login</a>
                                 </li>
+                                <li className="nav-item">
+                                    <a className="text-dark nav-link" href="/girls">Дівчата</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
