@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Notifications, {notify} from '../Notifications';
 import axios from 'axios';
 
 class MalyshkiAddWidgetContainer extends Component {
@@ -18,13 +19,14 @@ class MalyshkiAddWidgetContainer extends Component {
             name: this.state.name,
             image: this.state.image 
         };
-        axios.post('https://localhost:100/api/test.php', model)
+        axios.post('http://localhost:100/api/test.php', model)
             .then(
                 (resp)=>{
                     console.log('--success post--', resp.data);
                     this.props.history.push('/girls');
                 },
                 (err) => {
+                    notify('Помлка додавання користувача', '#dc3545');
                     console.log('--err problem---', err);
                 }
             );
@@ -64,6 +66,8 @@ class MalyshkiAddWidgetContainer extends Component {
                     </div>
                     <button type="submit" className="btn btn-info">Додати</button>
                 </form>
+
+                <Notifications />
             </React.Fragment>
         );
     }
