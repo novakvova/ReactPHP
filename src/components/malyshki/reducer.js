@@ -12,7 +12,7 @@ const initialState = {
     post: {
         error: false,
         loading: false,
-        isValid: false
+        success: false
     },
     list: {
         data: [],
@@ -29,12 +29,14 @@ export const malyshkiReducer = (state = initialState, action) => {
 
         case CREATE_POST_STARTED: {
             newState = update.set(state, 'post.loading', true);
+            newState = update.set(newState, 'post.success', false);
             break;
         }
 
         case CREATE_POST_SUCCESS: {
             newState = update.set(state, 'post.loading', false);
             newState = update.set(newState, 'post.form', null);
+            newState = update.set(newState, 'post.success', true);
             newState = update(newState, {
                 list: {
                     data: {
@@ -75,6 +77,20 @@ export const malyshkiReducer = (state = initialState, action) => {
     }
 
     return newState;
+}
+
+export const createNewPost = (model) => {
+    return (dispatch) => {
+        dispatch(createPostActions.started());
+
+        MalyshkiService.createNewPost(model)
+            .then((response) => {
+                dispatch(createPostActions.success(response));
+            })
+            .catch(() => {
+                dispatch(createPostActions.failed());
+            });
+    }
 }
 
 export const getListData = () => {

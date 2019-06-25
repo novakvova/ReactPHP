@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+import { withRouter } from 'react-router-dom';
+import * as malyshkiActions from './reducer';
+import get from 'lodash.get';
 import Notifications, {notify} from '../Notifications';
-import axios from 'axios';
+
 
 class MalyshkiAddWidgetContainer extends Component {
     constructor(props) {
@@ -11,6 +15,16 @@ class MalyshkiAddWidgetContainer extends Component {
         };
     }
 
+    UNSAFE_componentWillReceiveProps(newProps) {
+        console.log('new props', newProps);
+        const {isSuccess, history}= newProps;
+        if(isSuccess)
+        {
+            console.log('-----hsitory push-----');
+            history.push('/girls');
+        }
+    }
+
     onSubmitForm = (e) => {
         e.preventDefault();
         console.log('----submit form---');
@@ -19,17 +33,8 @@ class MalyshkiAddWidgetContainer extends Component {
             name: this.state.name,
             image: this.state.image 
         };
-        axios.post('http://localhost:100/api/test.php', model)
-            .then(
-                (resp)=>{
-                    console.log('--success post--', resp.data);
-                    this.props.history.push('/girls');
-                },
-                (err) => {
-                    notify('Помлка додавання користувача', '#dc3545');
-                    console.log('--err problem---', err);
-                }
-            );
+        this.props.createNewPost(model);
+        
     }
 
     onChangeInput = (e) => {
@@ -38,6 +43,7 @@ class MalyshkiAddWidgetContainer extends Component {
     }
 
     render() {
+        console.log('---GirlCreate props----', this.props);
         console.log('---GirlCreate state----', this.state);
         const { name, image } = this.state;
         return (
@@ -73,5 +79,21 @@ class MalyshkiAddWidgetContainer extends Component {
     }
 }
 
-const MalyshkiAddWidget = MalyshkiAddWidgetContainer;
+const mapStateToProps = (state) => {
+    return {
+        isPostLoading: get(state, 'malyshki.post.loading'),
+        isPostError: get(state, 'malyshki.post.error'),
+        isSuccess: get(state, 'malyshki.post.success')
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createNewPost: (model) => {
+            dispatch(malyshkiActions.createNewPost(model));
+        },
+    }
+}
+
+const MalyshkiAddWidget = withRouter(connect(mapStateToProps, mapDispatchToProps)(MalyshkiAddWidgetContainer));
 export default MalyshkiAddWidget;
